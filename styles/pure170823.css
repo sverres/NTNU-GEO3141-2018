@@ -1,0 +1,155 @@
+/*!
+CSS for tables are based on:
+Pure v0.6.2
+Copyright 2013 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+https://github.com/yahoo/pure/blob/master/LICENSE.md
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700,400italic);
+
+html {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  margin-left: 10%;
+  width: 80%;
+  max-width: 680px;
+  background-color: #F6F4EE;
+}
+
+#content h1, #content h2, #content h3, #content h4 {
+  font-family: 'Roboto Slab', serif;
+  font-weight: normal;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #53009F;
+}
+
+#markdown {
+  display: none;
+}
+
+#content h1:hover,
+#content h2:hover,
+#content a:hover {
+  background-color: #ddd;
+  cursor: pointer;
+  cursor: hand;
+}
+
+#content a:visited {
+  color: #7C2045;
+}
+
+#content a {
+  text-decoration: none;
+  color: #99318D;
+}
+
+#content a:hover {
+  text-decoration: underline;
+  color: #99318D;
+}
+
+#content {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+#content hr {
+  height: 2px;
+  background-color: black;
+  color: black;
+  border: 0 none;
+}
+
+#content blockquote {
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  border-left: 5px solid #ccc;
+}
+
+#content pre {
+  font-family: 'Inconsolata';
+}
+
+#content code {
+  font-family: 'Inconsolata';
+  display: inline-block;
+  overflow-x: auto;
+  min-width: 100%;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content img {
+  border-style: solid;
+  border-width: 1px;
+  color: #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content table {
+  /* Remove spacing between table cells (from Normalize.css) */
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  border: 1px solid #cbcbcb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content table caption {
+  font: italic 85%/1 arial, sans-serif;
+  padding: 1em 0;
+  text-align: center;
+  color: #000;
+}
+
+#content table td, #content table th {
+  font-size: inherit;
+  margin: 0;
+  overflow: visible;
+  /* to make ths where the title is really long work */
+  padding: 0.5em 1em;
+  /* cell padding */
+  border-width: 0 0 0 1px;
+  border-left: 1px solid #cbcbcb;
+  /* inner column border */
+}
+
+#content table thead {
+  text-align: left;
+  vertical-align: bottom;
+  background-color: #dcd4bc;
+  color: #000;
+}
+
+/* nth-child selector for modern browsers */
+#content table tr:nth-child(2n-1) td {
+  background-color: #eeeade;
+}
+
+#banner {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 4px 10% 4px 10%;
+  z-index:10;
+  background-color: black;
+}
+
+#updated {
+  margin-right: 20%;
+  text-align: right; 
+  font-size: 80%;
+  color: white;
+}

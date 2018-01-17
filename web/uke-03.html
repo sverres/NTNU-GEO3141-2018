@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>uke-03</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=viewport content="width=device-width, initial-scale=1">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css"/>
+    <style>
+
+/*!
+CSS for tables are based on:
+Pure v1.0.0
+Copyright 2013 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+https://github.com/yahoo/pure/blob/master/LICENSE.md
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700,400italic);
+
+html {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  margin-left: 10%;
+  width: 80%;
+  max-width: 680px;
+  background-color: #fff;
+}
+
+#content h1, #content h2, #content h3, #content h4 {
+  font-family: 'Roboto Slab', serif;
+  font-weight: normal;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #0078C8;
+}
+
+#markdown {
+  display: none;
+}
+
+#content h1:hover,
+#content h2:hover,
+#content a:hover {
+  background-color: #ddd;
+  cursor: pointer;
+  cursor: hand;
+}
+
+#content a:visited {
+  color: #7C2045;
+}
+
+#content a {
+  text-decoration: none;
+  color: #0078C8;
+}
+
+#content a:hover {
+  text-decoration: underline;
+  color: #0078C8;
+}
+
+#content {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+#content hr {
+  height: 2px;
+  background-color: #808090;
+  color: #808090;
+  border: 0 none;
+}
+
+#content blockquote {
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  border-left: 5px solid #bfbfc7;
+}
+
+#content pre {
+  font-family: 'Inconsolata';
+}
+
+#content code {
+  font-family: 'Inconsolata';
+  display: inline-block;
+  overflow-x: auto;
+  min-width: 100%;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content img {
+  border-style: solid;
+  border-width: 1px;
+  color: #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content table {
+  /* Remove spacing between table cells (from Normalize.css) */
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  border: 1px solid #cbcbcb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.23);
+  margin-bottom: 1em;
+}
+
+#content table caption {
+  font: italic 85%/1 arial, sans-serif;
+  padding: 1em 0;
+  text-align: center;
+  color: #000;
+}
+
+#content table td, #content table th {
+  font-size: inherit;
+  margin: 0;
+  overflow: visible;
+  /* to make ths where the title is really long work */
+  padding: 0.5em 1em;
+  /* cell padding */
+  border-width: 0 0 0 1px;
+  border-left: 1px solid #cbcbcb;
+  /* inner column border */
+}
+
+#content table thead {
+  text-align: left;
+  vertical-align: bottom;
+  background-color: #d8d8dd;
+  color: #000;
+}
+
+/* nth-child selector for modern browsers */
+#content table tr:nth-child(2n) td {
+  background-color: #e5e5e8;
+}
+
+#banner {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 4px 10% 4px 10%;
+  z-index:10;
+  background-color: black;
+}
+
+#updated {
+  margin-right: 20%;
+  text-align: right; 
+  font-size: 80%;
+  color: white;
+}
+    </style>
+</head>
+<body>
+	<div id="banner">
+		<div id="updated">
+
+			Sist oppdatert:  16.01.2018   9:23
+
+		</div>
+	</div>
+    <div id="markdown">
+
+# GEO3141 - Vår 2018 - uke 3
+
+---
+
+## Målsetting
+
+- Få god kjennskap til WMS-tjeneste-oppsett på ArcGIS Server
+- Bli godt kjent med oppsett av webkart i Open Layers
+- Lære om WMTS-oppsett i ArcGIS Server
+
+## Aktiviteter
+
+- Lese på stoffet under ressurser for å lære om WMS, Open Layers og WMTS
+
+
+## Samling på mandag
+
+- Kahoot om den geografiske infrastrukturen - innledende runde
+- Forelesning/instruksjon om Open Layers
+- Praktisk arbeid med WMS-tjenester og Open Layers-webkart:
+- Mal du kan starte med her: [WMS-webkart med Open Layers](open-layers-WMS.html)
+
+## Samling på torsdag
+
+- Forelesning om WMTS-oppsett på ArcGIS Server
+- Ukeoppgave om WMTS-tjenester
+
+## Presentasjoner og opptak
+
+Dato |Tema |Format
+---|---|---|---
+15.01 |Kahoot om den geografiske infrastrukturen (må ha Kahoot-konto for å se denne)|[HTML](https://play.kahoot.it/#/?quizId=d3ce6b1c-d86e-4d8b-afb6-b938820e7e8f)
+|  |WMS-webkart med Open Layers |[HTML](open-layers-WMS.html) [PC](https://screencast.uninett.no/relay/ansatt/sverrstintnu.no/2018/15.01/1363267/GEO3141_-_Open_Layers_WMS-kart_-_20180115_125833_39.html) [Pad](https://screencast.uninett.no/relay/ansatt/sverrstintnu.no/2018/15.01/1363267/GEO3141_-_Open_Layers_WMS-kart_-_20180115_125833_36.html) 
+|  |Eksempel på WMS-kart for copernicus-tjeneste |[HTML](WMS-3857-copernicus.html)
+
+## Ressurser
+
+- [What is ArcGIS Server?](http://enterprise.arcgis.com/en/server/latest/get-started/windows/what-is-arcgis-for-server-.htm)
+- [Components of ArcGIS Server](http://enterprise.arcgis.com/en/server/latest/get-started/windows/components-of-arcgis-for-server.htm)
+- [Tutorial: Publishing a WMS service](http://enterprise.arcgis.com/en/server/latest/get-started/windows/tutorial-publishing-a-wms-service.htm)
+- [Tutorial: Creating a cached map service](http://enterprise.arcgis.com/en/server/latest/get-started/windows/tutorial-creating-a-cached-map-service.htm)
+- [Introduksjon til Open Layers - fra GEO2311 - H2017](http://folk.ntnu.no/sverrsti/GEO2311-H2017/openlayers-intro.html)
+- [Open Layers stoff fra uke 39, GEO2311, H2017](http://folk.ntnu.no/sverrsti/GEO2311-H2017/uke-39.html)
+- [WMTS-stoff fra uke 44, GEO2311, H2017](http://folk.ntnu.no/sverrsti/GEO2311-H2017/uke-44.html)
+- Finn WMS- og WMTS-stoff i litteraturlista (veiledere og standarder)
+    </div>
+    <div id="content">
+
+        <h3> ¯\_(ツ)_/¯  </h3>
+
+    </div>
+    <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    </script>
+    <script type="text/javascript"
+      src="https://cdn.rawgit.com/crookedneighbor/markdown-it-link-attributes/9891626a0563d5b5a03758ccb2d162da80e4aa5a/dist/markdown-it-link-attributes.min.js"/>
+    </script>
+    <script type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.0/markdown-it.min.js">
+    </script>
+    <script type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+    </script>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script>
+        var md = markdownit({
+          html: true,
+          linkify: true,
+          breaks: true
+        });
+        md.use(markdownitLinkAttributes, [{
+          pattern: /^docs/,
+          attrs: {
+            target: '_blank',
+            rel: 'noopener'
+          }
+        }, {
+          pattern: /^https?:\/\//,
+          attrs: {
+            target: '_blank',
+            rel: 'noopener'
+          }
+        }, {
+          pattern: /^http?:\/\//,
+          attrs: {
+            target: '_blank',
+            rel: 'noopener'
+          }
+        }]);
+        $('#content').html(md.render($('#markdown').html().
+          replace(/&lt;/g, '<').
+          replace(/&gt;/g, '>').
+          replace(/&amp;/g, '&')));
+        $('h2').each(function () {
+          var self = $(this);
+          var contents = self.nextUntil('h2');
+          $(contents).wrapAll('<section />');
+        });
+        $('h1').click(function (event) {
+          $('section').toggle();
+        });
+        $('h2').click(function (event) {
+          $(event.target).next().toggle();
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+</body>
+</html>
