@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>om-emnet</title>
+    <title>WMTS-opprette-tjeneste</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css"/>
@@ -174,88 +174,139 @@ body {
 	</div>
     <div id="markdown">
 
-# GEO3141 Infrastrukturer for stedfestet informasjon
+# WMTS: arbeidsgang ved oppretting av tjeneste på ArcGIS Server
 
 ---
 
-## Velkommen!
+## Forutsetninger
 
-I dette emnet vil du bli kjent med begrepet infrastruktur.  Infrastruktur er et vidt begrep, men her ser vi på det innenfor rammen av stedfestet informasjon. Stedfestet informasjon er et ganske generelt begrep, og vi bruker ofte begrepene geografiske data eller geodata i stedet.
+- WMS-tjeneste er opprettet fra før.
 
-- [Litteraturlista](litteratur.html) gir en god oversikt over hvilke temaer som inngår i emnet. Den er satt opp tematisk og viser ikke nødvendigvis i hvilken rekkefølge vi skal gå igjennom stoffet. Lista er ganske omfattende, så det er ikke meningen at alt under hvert punkt skal leses i detalj. Ukeplanene vil gi nærmerere beskrivelse av hva som er forventet.
+## Arbeidsoperasjoner
 
-- [Programvare](programvare.html) gir oversikt over programvare som brukes i emnet.
+1. Hente ut metadata fra WMS-tjeneste
+1. Bestemme zoom-nivåer
+1. Opprette tjenesten i ArcGIS Manager
+1. Administrere tjenesten fra ArcMap
+1. Hente ut metadata fra WMTS-tjeneste
 
-- [Emneinnholdet](index.html) vil bli organisert ut fra ukeplaner. Ukeplanene vil inneholde faglig målsetting, referanser til lærestoff og beskrivelse av aktiviteter.
 
-- [Emneplanen](emneplan.html) har ukesvis oversikt over når temaene skal behandles.
+## Hente ut metadata fra WMS-tjeneste
 
-- [Emnebeskrivelsen](http://www.ntnu.no/studier/emner/GEO3141/2017/1#tab=omEmnet) gir en overordnet beskrivelse av emnet.
+- Finn url for tjenesten:
 
-- [Emneansvarlig:](https://www.ntnu.no/ansatte/sverre.stikbakke) Sverre Stikbakke
+![Finn url for tjenesten](images/arcgis/serviceurl.png)
 
-## Timeplanen
+- Send getcapabilities-kall:
 
-- mandager 12:15-15:00: Brukes til forelesninger, gjennomgang av ukeplanen, gruppearbeid og individuelt arbeid. 
-- torsdager 12:15-16:00: Legges opp etter behov med forelesning, instruksjon i programvare, gruppearbeid og individuelt arbeid.
-- fredager 12:15-16:00: Rom er reservert for campus-studenter. Ikke organisert felles-aktivitet.
-- fredager 13:30-15:00: Veiledning for nettstudenter på Blacboard Collaborate - åpen sesjon (drop-in, men interesserte må melde seg før kl. 14:00).
+```ini
+https://copernicus.hig.no:6443/arcgis/services/SverreSt/kommuner_oppland_v2/MapServer/WMSServer?
+service=wms&
+request=getcapabilities&
+version=1.3
+```
 
-## Mappeoppgaver
+- Ferdige oppsatt getcapabilities-kall finnes også under *capabilities* på hver tjeneste (se *WMS*-link på menylinjen øverst):
+  - [F.eks. for Kommuner i Oppland](https://copernicus.hig.no:6443/arcgis/rest/services/SverreSt/kommuner_oppland_v2/MapServer)
+  - [WMS](https://copernicus.hig.no:6443/arcgis/services/SverreSt/kommuner_oppland_v2/MapServer/WMSServer?request=GetCapabilities&service=WMS)
+  - [Samleside for alle tjenester](https://copernicus.hig.no:6443/arcgis/rest/services)
 
-Vurderingsordningen i emnet er mappevurdering. Dette innebærer 3 mappeoppgaver og en avsluttende muntlig utspørring. Karakteren blir satt ut fra en helhetlig vurdering.
 
-Se menypunktet *mappeoppgaver* for innleveringsfrister. Oppgavetekstene blir også lagt ut der.
+- Hent ut extent-informasjon for aktuelt koordinatsystem:
 
-## Muntlig utspørring
+```xml
+<BoundingBox CRS="EPSG:25832" minx="413293.839029" miny="6667145.701779" 
+maxx="617929.028165" maxy="6916352.912269"/>
+```
 
-Tidspunkt (foreløpig - må verifiseres):
-- mandag 14. mai
-- tirsdag 15. mai
-- onsdag 16. mai (reserve-dag)
+- Navn på aktuelle kartlag:
 
-## Blackboard Collaborate
+```xml
+<Layer queryable="1">
+  <Name>bygning</Name>
+  ...
+</Layer>
+```
 
-Blackboard har et verktøy for nettmøter som vi kan bruke til samtaler, diskusjon og veiledning over nett. Så med tanke på dere som er nettstudenter har vi satt opp noen møtetidspunkt i Collaborate:
+## Bestemme zoom-nivåer
 
-- tirsdager kl. 21:00-22:00. "Møterommet" i Collaborate er åpent for alle. Vanligvis vil det ikke være noen lærer her, men dette er tenkt som en møteplass der dere kan diskutere fagstoff og samarbeide. Bruk gjerne forumet for å avtale frammøte, poste spørsmål som du vil ha diskutert etc.
+Antall zoom-nivåer kan variere, men hvert ekstra zoom-nivå tar plass på serveren. Vi bruker derfor her maksimalt 5 zoom-nivåer.
 
-- fredager kl. 13:30-15:00. Dette er en drop-in-sesjon der du kan få kontakt med faglærer. Jeg (Sverre) vil holde sesjonen åpen i denne tiden. Her kan du få hjelp med faglige spørsmål, og kan f.eks. vise prosedyrer i programvare ved å dele skjermen min.
+En passende inndeling for fkb-data kan være målestokkene 25000, 15000, 10000, 5000, 2500. For andre typer data kan det være mer passende med mindre målestokker, f.eks. 50000 eller mindre.
 
-Se nærmere om bruken av Collaborate her:
+## Opprette tjenesten i ArcGIS Manager
 
-- [Blackboard help](https://en-us.help.blackboard.com/Collaborate/Ultra/Participant/010_Get_Started/Start_Here_With_The_Basics!)
+- Gå inn på Manage services og din mappe i ArcGIS Server Manager
 
-Jeg har satt opp møtetidspunkt for januar. Hvis dette fungerer bra, så setter vi opp nye møter, eller gjør noen endringer.
+![Finn url for tjenesten](images/arcgis/manageservices.png)
 
-## Referansegruppe
+- Velg __caching__. Det skal se ca. slik ut:
 
-Studentene i gruppa skal
+![Finn url for tjenesten](images/arcgis/tilingscheme.png)
 
-- ha løpende dialog med alle emnets studenter og representere studentene i referansegruppemøter.
-- ​representere alle studentene i emnet.
-- skrive referansegrupperapport med forslag til tiltak, som sendes emneansvarlig.
+- Øverst på siden: velg __Using tiles from a cache__.
+- Under __Tiling Scheme__, sett __Suggest__.
+- Skriv inn hver målestokk-verdi og trykk __Add__.
+- Minimum og maximum scale angir målstokk-området det skal lages kartfliser for. Angi passende verdi.
+- Origin er øverste venstre hjørne for __tilematrix__. Sett inn verdier for dette fra metadataene for WMS-tjenesten.
+- Trykk på __Save and Restart__. Legg merke til flis-symbolet som kommer opp til høyre for teksten (Map Service). Det viser at dette er en tjeneste med kartfliser.
 
-Medlemmer
-- NN
-- NN
-- NN
+![Finn url for tjenesten](images/arcgis/flissymbol.png)
 
-Møtetidspunkt
-- uke 4
-- uke 10
-- uke 16
+## Administrere tjenesten fra ArcMap
 
-Se nærmere om referansegrupper her:
+Hvis du vil slette kartflisene hvs det kanskje ikke ble riktig i første forsøk, kan det gjøres fra ArcMap.
+(Informasjon om dette kommer)
 
-- [Referansegruppe - for studenter](https://innsida.ntnu.no/wiki/-/wiki/Norsk/Referansegruppe+-+for+studenter)
+## Hente ut metadata fra WMTS-tjeneste
 
-## Emnelærere
+Url for WMTS-metadata hentes ut fra samme sted som WMS-metadata. Velg WMTS i dra-ned-menyen.
 
-- [Sverre Stikbakke](https://www.ntnu.no/ansatte/sverre.stikbakke)
-- [Erling Onstein](https://www.ntnu.no/ansatte/erling.onstein)
-- [Knut Jetlund](https://www.ntnu.no/ansatte/knutje)
+```ini
+https://copernicus.hig.no:6443/arcgis/rest/services/sverrsti/Lillehammer/MapServer/WMTS/1.0.0/WMTSCapabilities.xml
+```
 
+Med denne url'en kan metadata hentes ut direkte - man trenger ikke å føye til de vanlige parametrene for getcapabilities-kall (men resultatet som kommer er likefullt basert på et getcapabilities-kall).
+
+For å lage webkart trenger vi
+
+- __ScaleDenominator__: målestokk-informasjon fra hvert flislag (tilematrix)
+- __ows:Identifier__ for Layer: navn på kartlaget
+- __ows:Identifier__ for TilematrixSet: fellesnavn for alle flislagene
+- __ows:Identifier__ for Tilematrix: navn på flislaget (zoom-nivået)
+- __ows:LowerCorner__: nedre venstre hjørne
+- __ows:UpperCorner__: øvre høyre hjørne
+
+
+```xml
+<Contents>
+<!-- Layer -->
+  <Layer>
+    <ows:Title>sverrsti_Lillehammer</ows:Title>
+    <ows:Identifier>sverrsti_Lillehammer</ows:Identifier>
+    <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::25832">
+      <ows:LowerCorner>556183.8200000003 6766438.199999999</ows:LowerCorner>
+      <ows:UpperCorner>592522.8300000001 6789942.02</ows:UpperCorner>
+    </ows:BoundingBox>
+    ...
+  </Layer>
+  <TileMatrixSet>
+    ...
+    <ows:Identifier>default028mm</ows:Identifier>
+    ...
+    <TileMatrix>
+      <ows:Identifier>0</ows:Identifier>
+      <ScaleDenominator>23623.559151877238</ScaleDenominator>
+      <TopLeftCorner>556183.82 6789942.02</TopLeftCorner>
+      <TileWidth>256</TileWidth>
+      <TileHeight>256</TileHeight>
+      <MatrixWidth>22</MatrixWidth>
+      <MatrixHeight>14</MatrixHeight>
+    </TileMatrix>
+    ...
+  </TileMatrixSet>
+</Contents>
+```
 
     </div>
     <div id="content">

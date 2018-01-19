@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>om-emnet</title>
+    <title>visningstjenester-utstrekning</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css"/>
@@ -174,88 +174,72 @@ body {
 	</div>
     <div id="markdown">
 
-# GEO3141 Infrastrukturer for stedfestet informasjon
+# Visningstjenester - om utstrekning - extent
 
 ---
 
-## Velkommen!
+Begrepet extent kommer opp i en del sammenhenger i forbindelse med WMS- og WMTS-tjenester og i Open Layers javascript-kode. Her kommer en oversikt over ulike definisjoner eller bruksområder for dette.
 
-I dette emnet vil du bli kjent med begrepet infrastruktur.  Infrastruktur er et vidt begrep, men her ser vi på det innenfor rammen av stedfestet informasjon. Stedfestet informasjon er et ganske generelt begrep, og vi bruker ofte begrepene geografiske data eller geodata i stedet.
+1. Kartprojeksjonens utstrekning
+1. Kartverkets utstrekning
+1. Datasettets utstrekning
+1. ArcGIS-prosjektets dekningsområde
+1. WMS-tjenestens utstrekning
+1. WMTS-kartflisenes utstrekning
+1. Utstrekning - extent-begrepet i Open Layers
 
-- [Litteraturlista](litteratur.html) gir en god oversikt over hvilke temaer som inngår i emnet. Den er satt opp tematisk og viser ikke nødvendigvis i hvilken rekkefølge vi skal gå igjennom stoffet. Lista er ganske omfattende, så det er ikke meningen at alt under hvert punkt skal leses i detalj. Ukeplanene vil gi nærmerere beskrivelse av hva som er forventet.
+Hver av disse er nærmere beskrevet nedenfor.
 
-- [Programvare](programvare.html) gir oversikt over programvare som brukes i emnet.
+## Kartprojeksjonens utstrekning
 
-- [Emneinnholdet](index.html) vil bli organisert ut fra ukeplaner. Ukeplanene vil inneholde faglig målsetting, referanser til lærestoff og beskrivelse av aktiviteter.
+Hver kartprojeksjon har et geografisk område hvor denne kartprojeksjonen er gyldig. Dette kan vi finne bl.a. på [EPSG.io](http://epsg.io). For EUREF89 UTM sone 32, med kode [EPSG:25832](http://epsg.io/25832), kan vi finne *Projected bounds* som
 
-- [Emneplanen](emneplan.html) har ukesvis oversikt over når temaene skal behandles.
+x |y
+--|--
+-1878007.03| 3932282.86
+831544.53| 9437501.55
 
-- [Emnebeskrivelsen](http://www.ntnu.no/studier/emner/GEO3141/2017/1#tab=omEmnet) gir en overordnet beskrivelse av emnet.
+Dette er henholdsvis nedre venstre og øvre høyre hjørne med koordinater i denne projeksjonen. På samme side kan man også finne disse punktene oppgitt med geografiske koordinater.
 
-- [Emneansvarlig:](https://www.ntnu.no/ansatte/sverre.stikbakke) Sverre Stikbakke
+## Kartverkets utstrekning
 
-## Timeplanen
+Kartverket har for sine visningstjenester definert et mindre/forskjøvet område for sine tjenester. F.eks. for UTM sone 32:
 
-- mandager 12:15-15:00: Brukes til forelesninger, gjennomgang av ukeplanen, gruppearbeid og individuelt arbeid. 
-- torsdager 12:15-16:00: Legges opp etter behov med forelesning, instruksjon i programvare, gruppearbeid og individuelt arbeid.
-- fredager 12:15-16:00: Rom er reservert for campus-studenter. Ikke organisert felles-aktivitet.
-- fredager 13:30-15:00: Veiledning for nettstudenter på Blacboard Collaborate - åpen sesjon (drop-in, men interesserte må melde seg før kl. 14:00).
+x |y
+--|--
+-2000000 |3500000
+3545984	|9045984
 
-## Mappeoppgaver
+Kilde: [Kartverkets API-er, WMS- og cache-tjenester](http://www.kartverket.no/data/api-og-wms/)
 
-Vurderingsordningen i emnet er mappevurdering. Dette innebærer 3 mappeoppgaver og en avsluttende muntlig utspørring. Karakteren blir satt ut fra en helhetlig vurdering.
+## Datasettets utstrekning
 
-Se menypunktet *mappeoppgaver* for innleveringsfrister. Oppgavetekstene blir også lagt ut der.
+Dette kan være definert i metadataene for datasettet. Hvis datasettet ikke har metadata, vil gjerne GIS-programmer som ArcGIS kalkulere utstrekning. Dette finner vi i ArcGIS under Layer Properties/Source.
 
-## Muntlig utspørring
+## ArcGIS-prosjektets utstrekning
 
-Tidspunkt (foreløpig - må verifiseres):
-- mandag 14. mai
-- tirsdag 15. mai
-- onsdag 16. mai (reserve-dag)
+ArcMap vil som standard kalkulere den samlede utstrekning for alle kartlagene, men dette kan overstyres under Data Frame Properties.
 
-## Blackboard Collaborate
+## WMS-tjenestens utstrekning
 
-Blackboard har et verktøy for nettmøter som vi kan bruke til samtaler, diskusjon og veiledning over nett. Så med tanke på dere som er nettstudenter har vi satt opp noen møtetidspunkt i Collaborate:
+WMS-tjenester på ArcGIS Server blir definert ut fra et ArcMap prosjekt (mxd-fil), så det er rimelig å anta at WMS-tjenestens utstrekning er den samme som ArcGIS-prosjektets utstrekning. Dette må verifiseres.
 
-- tirsdager kl. 21:00-22:00. "Møterommet" i Collaborate er åpent for alle. Vanligvis vil det ikke være noen lærer her, men dette er tenkt som en møteplass der dere kan diskutere fagstoff og samarbeide. Bruk gjerne forumet for å avtale frammøte, poste spørsmål som du vil ha diskutert etc.
+## WMTS-kartflisenes utstrekning
 
-- fredager kl. 13:30-15:00. Dette er en drop-in-sesjon der du kan få kontakt med faglærer. Jeg (Sverre) vil holde sesjonen åpen i denne tiden. Her kan du få hjelp med faglige spørsmål, og kan f.eks. vise prosedyrer i programvare ved å dele skjermen min.
+I ArcGIS Server Manager settes det opp øvre venstre hjørne for *Tilematrix*, i denne dialogen (origin):
 
-Se nærmere om bruken av Collaborate her:
+![tilingscheme](images/arcgis/tilingscheme.png)
 
-- [Blackboard help](https://en-us.help.blackboard.com/Collaborate/Ultra/Participant/010_Get_Started/Start_Here_With_The_Basics!)
+Hvordan nedre høyre hjørne bestemmes er det ikke sagt noe om her, men det er vel rimelig å anta at det bestemmes av den underliggende WMS-tjenestens utstrekning. Her er det verd å nevne at det sannsynligvis er en feil i ArcGIS Server-programmet. Hvis du går inn igjen i denne dialogen på nytt vil du se at Y-verdien viser det samme som X-verdien. Det er selvsagt den opprinnelige Y-verdien som burde vært vist. Likevel, kartflisene blir opprettet med den verdien for Y som du legger inn.
 
-Jeg har satt opp møtetidspunkt for januar. Hvis dette fungerer bra, så setter vi opp nye møter, eller gjør noen endringer.
+## Utstrekning - extent-begrepet i Open Layers
 
-## Referansegruppe
+Open Layers benytter seg av *extent* flere steder, og det er viktig å kjenne til forskjellen mellom disse.
 
-Studentene i gruppa skal
-
-- ha løpende dialog med alle emnets studenter og representere studentene i referansegruppemøter.
-- ​representere alle studentene i emnet.
-- skrive referansegrupperapport med forslag til tiltak, som sendes emneansvarlig.
-
-Medlemmer
-- NN
-- NN
-- NN
-
-Møtetidspunkt
-- uke 4
-- uke 10
-- uke 16
-
-Se nærmere om referansegrupper her:
-
-- [Referansegruppe - for studenter](https://innsida.ntnu.no/wiki/-/wiki/Norsk/Referansegruppe+-+for+studenter)
-
-## Emnelærere
-
-- [Sverre Stikbakke](https://www.ntnu.no/ansatte/sverre.stikbakke)
-- [Erling Onstein](https://www.ntnu.no/ansatte/erling.onstein)
-- [Knut Jetlund](https://www.ntnu.no/ansatte/knutje)
-
+- Kartprojeksjonens utstrekning legges inn i definisjonen av kartprojeksjonen hvis det brukes noe annet enn Web Mercator.
+- WMTS-tjenester må kjenne til kartflisenes utstrekning, og dette legges inn under definisjonen av *tileGrid*.
+- WMS-tjenester *kan ha* en utstrekning, og det kan være praktisk å legge inn dette. Open Layers-klienten vil ikke be om kartbilder for noe område utenfor den oppgitte utstrekningen. Fordelen med dette er at serveren ikke belastes med å lage tomme kartbilder for områder som ikke har data.
+- Kartvinduet, *view'et*, *kan ha* en utstrekning. Det vil begrense hvor langt man kan bevege seg i kartet. Hvis det ikke er satt noen utstrekning vil man kunne bevege seg rundt i hele kartprojeksjonens utstrekning. Dette vil også begrense antallet kall som sendes til serveren.
 
     </div>
     <div id="content">

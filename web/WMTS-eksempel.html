@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>om-emnet</title>
+    <title>WMTS-eksempel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css"/>
@@ -174,88 +174,130 @@ body {
 	</div>
     <div id="markdown">
 
-# GEO3141 Infrastrukturer for stedfestet informasjon
+# WMTS-eksempel for Lillehammer-kart i UTM sone 32-projeksjon
 
 ---
 
-## Velkommen!
+## WMTS.js
 
-I dette emnet vil du bli kjent med begrepet infrastruktur.  Infrastruktur er et vidt begrep, men her ser vi på det innenfor rammen av stedfestet informasjon. Stedfestet informasjon er et ganske generelt begrep, og vi bruker ofte begrepene geografiske data eller geodata i stedet.
+```javascript
+var urlarcgis= 'http://copernicus.hig.no:6080/arcgis/rest/services';
+var folder = '/sverrsti';
+var servicename = '/Lillehammer';
+var servicetype = '/MapServer/WMTS?';
+var url = urlarcgis + folder + servicename + servicetype;
 
-- [Litteraturlista](litteratur.html) gir en god oversikt over hvilke temaer som inngår i emnet. Den er satt opp tematisk og viser ikke nødvendigvis i hvilken rekkefølge vi skal gå igjennom stoffet. Lista er ganske omfattende, så det er ikke meningen at alt under hvert punkt skal leses i detalj. Ukeplanene vil gi nærmerere beskrivelse av hva som er forventet.
+var layer = 'sverrsti_Lillehammer';
 
-- [Programvare](programvare.html) gir oversikt over programvare som brukes i emnet.
+var attribution = new ol.Attribution({
+  html: 'Kartgrunnlag: <a href="http://kartverket.no">Kartverket</a>'
+});
 
-- [Emneinnholdet](index.html) vil bli organisert ut fra ukeplaner. Ukeplanene vil inneholde faglig målsetting, referanser til lærestoff og beskrivelse av aktiviteter.
+var extentKartverket = [
+  -2000000, 3500000, // lower left:  Easting, Northing
+  3545984, 9045984 // upper right: Easting, Northing
+];
 
-- [Emneplanen](emneplan.html) har ukesvis oversikt over når temaene skal behandles.
+var extentCopernicus = [
+  556183.8200,  6766438.2000, // lower left:  Easting, Northing
+  592522.8300,  6789942.02 // upper right: Easting, Northing
+];
 
-- [Emnebeskrivelsen](http://www.ntnu.no/studier/emner/GEO3141/2017/1#tab=omEmnet) gir en overordnet beskrivelse av emnet.
+// Datum og projeksjon: EUREF89, UTM zone 32
+var projection = new ol.proj.Projection({
+  code: 'EPSG:25832',
+  extent: extentKartverket
+});
 
-- [Emneansvarlig:](https://www.ntnu.no/ansatte/sverre.stikbakke) Sverre Stikbakke
+// Oppløsning pr. pixel i meter pr. tileMatrix (zoom-nivå)
+var resolutions = [  // = ScaleDenominator * 0.00028
+  6.614596562525626, // = 23623.559151877238 * 0.00028
+  3.968757937515376, // = 14174.135491126344 * 0.00028
+  2.6458386250102506, // = 9449.423660750896 * 0.00028
+  1.3229193125051253, // = 4724.711830375448 * 0.00028
+  0.6614596562525626 // = 2362.355915187724 * 0.00028
+];
 
-## Timeplanen
+var matrixSet = 'default028mm'; // standard-verdi for ArcGIS
+var matrixIds = [0, 1, 2, 3, 4];
 
-- mandager 12:15-15:00: Brukes til forelesninger, gjennomgang av ukeplanen, gruppearbeid og individuelt arbeid. 
-- torsdager 12:15-16:00: Legges opp etter behov med forelesning, instruksjon i programvare, gruppearbeid og individuelt arbeid.
-- fredager 12:15-16:00: Rom er reservert for campus-studenter. Ikke organisert felles-aktivitet.
-- fredager 13:30-15:00: Veiledning for nettstudenter på Blacboard Collaborate - åpen sesjon (drop-in, men interesserte må melde seg før kl. 14:00).
+var center = [579327, 6777430]; // Easting, Northing
+var zoom = 0;
 
-## Mappeoppgaver
+var fkb = new ol.layer.Tile({
+  source: new ol.source.WMTS({
+    attributions: [attribution],
+    url: url,
+    layer: layer,
+    matrixSet: matrixSet,
+    format: 'image/png',
+    tileGrid: new ol.tilegrid.WMTS({
+      extent: extentCopernicus,
+      resolutions: resolutions,
+      matrixIds: matrixIds
+    }),
+    style: 'default',
+  })
+});
 
-Vurderingsordningen i emnet er mappevurdering. Dette innebærer 3 mappeoppgaver og en avsluttende muntlig utspørring. Karakteren blir satt ut fra en helhetlig vurdering.
+var topo2 = new ol.layer.Tile({
+  extent: extentCopernicus,  // denne linjen kan slettes
+  source: new ol.source.TileWMS({
+    url: 'http://openwms.statkart.no/skwms1/wms.topo2?',
+    params: {
+      'LAYERS': 'topo2_WMS',
+      'STYLES': 'default'
+    }
+  })
+});
 
-Se menypunktet *mappeoppgaver* for innleveringsfrister. Oppgavetekstene blir også lagt ut der.
+var map = new ol.Map({
+  layers: [topo2, fkb],
+  target: 'map',
+  view: new ol.View({
+    projection: projection,
+    //extent: extentCopernicus,  // denne linjen kan slettes
+    center: center,
+    resolutions: resolutions,
+    zoom: zoom
+  })
+});
+```
 
-## Muntlig utspørring
+## WMTS.html
 
-Tidspunkt (foreløpig - må verifiseres):
-- mandag 14. mai
-- tirsdag 15. mai
-- onsdag 16. mai (reserve-dag)
+```c
+<!--
+<!DOCTYPE html>
+<html>
 
-## Blackboard Collaborate
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border: solid 1px;
+    }
+  </style>
+  <title>Lillehammer</title>
+</head>
 
-Blackboard har et verktøy for nettmøter som vi kan bruke til samtaler, diskusjon og veiledning over nett. Så med tanke på dere som er nettstudenter har vi satt opp noen møtetidspunkt i Collaborate:
+<body>
 
-- tirsdager kl. 21:00-22:00. "Møterommet" i Collaborate er åpent for alle. Vanligvis vil det ikke være noen lærer her, men dette er tenkt som en møteplass der dere kan diskutere fagstoff og samarbeide. Bruk gjerne forumet for å avtale frammøte, poste spørsmål som du vil ha diskutert etc.
+  <div id="map"></div>
 
-- fredager kl. 13:30-15:00. Dette er en drop-in-sesjon der du kan få kontakt med faglærer. Jeg (Sverre) vil holde sesjonen åpen i denne tiden. Her kan du få hjelp med faglige spørsmål, og kan f.eks. vise prosedyrer i programvare ved å dele skjermen min.
+  <script src="http://openlayers.org/en/v3.20.1/build/ol-debug.js" type="text/javascript"></script>
+  <script src="wmts.js" type="text/javascript"></script>
 
-Se nærmere om bruken av Collaborate her:
+</body>
 
-- [Blackboard help](https://en-us.help.blackboard.com/Collaborate/Ultra/Participant/010_Get_Started/Start_Here_With_The_Basics!)
-
-Jeg har satt opp møtetidspunkt for januar. Hvis dette fungerer bra, så setter vi opp nye møter, eller gjør noen endringer.
-
-## Referansegruppe
-
-Studentene i gruppa skal
-
-- ha løpende dialog med alle emnets studenter og representere studentene i referansegruppemøter.
-- ​representere alle studentene i emnet.
-- skrive referansegrupperapport med forslag til tiltak, som sendes emneansvarlig.
-
-Medlemmer
-- NN
-- NN
-- NN
-
-Møtetidspunkt
-- uke 4
-- uke 10
-- uke 16
-
-Se nærmere om referansegrupper her:
-
-- [Referansegruppe - for studenter](https://innsida.ntnu.no/wiki/-/wiki/Norsk/Referansegruppe+-+for+studenter)
-
-## Emnelærere
-
-- [Sverre Stikbakke](https://www.ntnu.no/ansatte/sverre.stikbakke)
-- [Erling Onstein](https://www.ntnu.no/ansatte/erling.onstein)
-- [Knut Jetlund](https://www.ntnu.no/ansatte/knutje)
-
+</html>
+-->
+```
+En komplett, og levende side finnes [her](http://sverres.net/GEO3141/Lillehammer/WMTS.html).  
+Trykk på *Ctrl + U* for å se koden.
 
     </div>
     <div id="content">

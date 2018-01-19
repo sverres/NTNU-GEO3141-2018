@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>om-emnet</title>
+    <title>WMTS-lage-web-kart</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name=viewport content="width=device-width, initial-scale=1">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs.min.css"/>
@@ -174,88 +174,180 @@ body {
 	</div>
     <div id="markdown">
 
-# GEO3141 Infrastrukturer for stedfestet informasjon
+# WMTS: arbeidsgang for webkart i Open Layers
 
 ---
 
-## Velkommen!
+- *(Oppdatert 19.01 med kode som samsvarer med eksemplet som ble vist på forelesning 18.01)*
 
-I dette emnet vil du bli kjent med begrepet infrastruktur.  Infrastruktur er et vidt begrep, men her ser vi på det innenfor rammen av stedfestet informasjon. Stedfestet informasjon er et ganske generelt begrep, og vi bruker ofte begrepene geografiske data eller geodata i stedet.
+## Forutsetninger
 
-- [Litteraturlista](litteratur.html) gir en god oversikt over hvilke temaer som inngår i emnet. Den er satt opp tematisk og viser ikke nødvendigvis i hvilken rekkefølge vi skal gå igjennom stoffet. Lista er ganske omfattende, så det er ikke meningen at alt under hvert punkt skal leses i detalj. Ukeplanene vil gi nærmerere beskrivelse av hva som er forventet.
+- WMTS-tjeneste er opprettet fra før.
+- Metadata fra WMTS-tjenesten er hentet ut.
 
-- [Programvare](programvare.html) gir oversikt over programvare som brukes i emnet.
+## Arbeidsoperasjoner
 
-- [Emneinnholdet](index.html) vil bli organisert ut fra ukeplaner. Ukeplanene vil inneholde faglig målsetting, referanser til lærestoff og beskrivelse av aktiviteter.
+- Legge inn WMTS-verdier i javascript-mal:
+  - url til tjeneste
+  - projeksjon (hvis det er noe annet enn Web Mercator)
+  - extent for tilematrix
+  - resolutions - disse må beregnes ut fra ScaleDenominator
+  - zoom-nivåer
+  - lagnavn
+- Legge til eventuelle WMS-lag
 
-- [Emneplanen](emneplan.html) har ukesvis oversikt over når temaene skal behandles.
 
-- [Emnebeskrivelsen](http://www.ntnu.no/studier/emner/GEO3141/2017/1#tab=omEmnet) gir en overordnet beskrivelse av emnet.
+## WMTS-kommuner.js
 
-- [Emneansvarlig:](https://www.ntnu.no/ansatte/sverre.stikbakke) Sverre Stikbakke
+```javascript
+var urlarcgis= 'https://copernicus.hig.no:6443/arcgis/rest/services';
+var folder = '/SverreSt';
+var servicename = '/kommuner_oppland_v2';
+var servicetype = '/MapServer/WMTS?';
+var url = urlarcgis + folder + servicename + servicetype;
 
-## Timeplanen
+var layer = 'SverreSt_kommuner_oppland_v2';
 
-- mandager 12:15-15:00: Brukes til forelesninger, gjennomgang av ukeplanen, gruppearbeid og individuelt arbeid. 
-- torsdager 12:15-16:00: Legges opp etter behov med forelesning, instruksjon i programvare, gruppearbeid og individuelt arbeid.
-- fredager 12:15-16:00: Rom er reservert for campus-studenter. Ikke organisert felles-aktivitet.
-- fredager 13:30-15:00: Veiledning for nettstudenter på Blacboard Collaborate - åpen sesjon (drop-in, men interesserte må melde seg før kl. 14:00).
+var attribution = new ol.Attribution({
+  html: 'Kartgrunnlag: <a href="http://kartverket.no">Kartverket</a>'
+});
 
-## Mappeoppgaver
+var extent = [
+  413293.8390285599, 6667145.701779299, // lower left:  Easting, Northing
+  617929.028165083, 6916352.912269401 // upper right: Easting, Northing
+];
 
-Vurderingsordningen i emnet er mappevurdering. Dette innebærer 3 mappeoppgaver og en avsluttende muntlig utspørring. Karakteren blir satt ut fra en helhetlig vurdering.
+var extentKartverket = [-2000000, 3500000, 3545984, 9045984];
 
-Se menypunktet *mappeoppgaver* for innleveringsfrister. Oppgavetekstene blir også lagt ut der.
+// Datum og projeksjon: EUREF89, UTM zone 32
+var projection = new ol.proj.Projection({
+  code: 'EPSG:25832',
+  extent: extentKartverket
+});
 
-## Muntlig utspørring
+// Oppløsning pr. pixel i meter pr. tileMatrix (zoom-nivå)
+var resolutions = [  // = ScaleDenominator * 0.00028
+  13.229193125051252, // = 47247.118303754476 * 0.00028
+  6.614596562525626, // = 23623.559151877238 * 0.00028
+  3.307298281262813, // = 11811.779575938619 * 0.00028
+  1.6536491406314064 // = 5905.8897879693095 * 0.00028
+];
 
-Tidspunkt (foreløpig - må verifiseres):
-- mandag 14. mai
-- tirsdag 15. mai
-- onsdag 16. mai (reserve-dag)
+var matrixSet = 'default028mm'; // standard-verdi for ArcGIS
+var matrixIds = [0, 1, 2, 3];
 
-## Blackboard Collaborate
+var center = [553040, 6772855]; // Easting, Northing
+var zoom = 0;
 
-Blackboard har et verktøy for nettmøter som vi kan bruke til samtaler, diskusjon og veiledning over nett. Så med tanke på dere som er nettstudenter har vi satt opp noen møtetidspunkt i Collaborate:
+var kommuner_oppland = new ol.layer.Tile({
+  source: new ol.source.WMTS({
+    attributions: [attribution],
+    url: url,
+    layer: layer,
+    matrixSet: matrixSet,
+    format: 'image/png',
+    tileGrid: new ol.tilegrid.WMTS({
+      extent: extent,
+      resolutions: resolutions,
+      matrixIds: matrixIds
+    }),
+    style: 'default',
+  })
+});
 
-- tirsdager kl. 21:00-22:00. "Møterommet" i Collaborate er åpent for alle. Vanligvis vil det ikke være noen lærer her, men dette er tenkt som en møteplass der dere kan diskutere fagstoff og samarbeide. Bruk gjerne forumet for å avtale frammøte, poste spørsmål som du vil ha diskutert etc.
+var topo4 = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: 'https://openwms.statkart.no/skwms1/wms.topo4.graatone',
+    params: {
+      'LAYERS': 'topo4graatone',
+      'STYLES': 'default'
+    },
+  })
+});
 
-- fredager kl. 13:30-15:00. Dette er en drop-in-sesjon der du kan få kontakt med faglærer. Jeg (Sverre) vil holde sesjonen åpen i denne tiden. Her kan du få hjelp med faglige spørsmål, og kan f.eks. vise prosedyrer i programvare ved å dele skjermen min.
+var map = new ol.Map({
+  layers: [topo4, kommuner_oppland],
+  target: 'map',
+  view: new ol.View({
+    extent: extent,
+    projection: projection,
+    center: center,
+    resolutions: resolutions,
+    zoom: zoom
+  })
+});
+```
 
-Se nærmere om bruken av Collaborate her:
+## WMTS-kommuner.html
 
-- [Blackboard help](https://en-us.help.blackboard.com/Collaborate/Ultra/Participant/010_Get_Started/Start_Here_With_The_Basics!)
+```c
+<!--
+<!DOCTYPE html>
+<html>
 
-Jeg har satt opp møtetidspunkt for januar. Hvis dette fungerer bra, så setter vi opp nye møter, eller gjør noen endringer.
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border: solid 1px;
+    }
+  </style>
+  <title>Kommuner i Oppland</title>
+</head>
 
-## Referansegruppe
+<body>
 
-Studentene i gruppa skal
+  <div id="map"></div>
 
-- ha løpende dialog med alle emnets studenter og representere studentene i referansegruppemøter.
-- ​representere alle studentene i emnet.
-- skrive referansegrupperapport med forslag til tiltak, som sendes emneansvarlig.
+  <script src="https://openlayers.org/en/v4.6.4/build/ol-debug.js" type="text/javascript"></script>
+  <script src="WMTS-kommuner.js" type="text/javascript"></script>
 
-Medlemmer
-- NN
-- NN
-- NN
+</body>
 
-Møtetidspunkt
-- uke 4
-- uke 10
-- uke 16
+</html>
+-->
+```
 
-Se nærmere om referansegrupper her:
+## Hvis projeksjonen er noe annet enn Web Mercator
 
-- [Referansegruppe - for studenter](https://innsida.ntnu.no/wiki/-/wiki/Norsk/Referansegruppe+-+for+studenter)
+Informasjon om hvilken projeksjon som brukes må legges inn. Open Layers-API'et vil da erstatte standardverdien EPSG:3857 i WMS- og WMTS-kall med det som er lagt inn.
 
-## Emnelærere
 
-- [Sverre Stikbakke](https://www.ntnu.no/ansatte/sverre.stikbakke)
-- [Erling Onstein](https://www.ntnu.no/ansatte/erling.onstein)
-- [Knut Jetlund](https://www.ntnu.no/ansatte/knutje)
+```javascript
+// Datum og projeksjon: EUREF89, UTM zone 32
+var projection = new ol.proj.Projection({
+  code: 'EPSG:25832',
+  extent: extentKartverket
+});
+```
 
+Extent i denne sammenheng kan være en annen extent enn flislagenes extent. F.eks. så kan man bruke Kartverkets standardverdier.
+
+```javascript
+var extentKartverket = [-2000000, 3500000, 3545984, 9045984];
+```
+
+For at dette skal bli aktivert må projection-variabelen legges inn i det aktuelle view'et (kartvindu):
+
+```javascript
+var map = new ol.Map({
+  layers: [topo2, fkb],
+  target: 'map',
+  view: new ol.View({
+    projection: projection,   // her! Denne linjen
+    center: center,
+    resolutions: resolutions,
+    zoom: zoom
+  })
+});
+```
+
+Komplett, levende kart med kartfliser fra copernicus:
+
+[Kommuner i Oppland](docs/WMTS-kommuner.html)
 
     </div>
     <div id="content">
